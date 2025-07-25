@@ -1,0 +1,59 @@
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Es-tu celèbre</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="script.js" defer></script>
+</head>
+<body>
+    <main class="container">
+        <div id="hidden" class="hiddencontainer">
+            <h2>Es-tu celèbre ? Renseigne toutes ces informations pour découvrir ton score de celèbrité.</h2>
+            <form id="celebrityForm">
+                <h3>Infos obligatoires</h3>
+
+                <label for="prenom">Ton prénom :</label>
+                <input type="text" id="prenom" name="prenom" placeholder="Jean" required>
+
+                <label for="nom">Ton nom :</label>
+                <input type="text" id="nom" name="nom" placeholder="Dupont" required>
+
+                <h3>Infos complémentaires</h3>
+
+                <label for="twitter">Ton compte X/Twitter :</label>
+                <input type="text" id="twitter" name="twitter" placeholder="twitter.com/toncompte">
+
+                <label for="ytb">Ton compte Youtube :</label>
+                <input type="text" id="ytb" name="ytb" placeholder="youtube.com/toncompte">
+
+                <label for="tiktok">Ton compte TikTok :</label>
+                <input type="text" id="tiktok" name="tiktok" placeholder="tiktok.com/@toncompte">
+
+                <label for="insta">Ton compte Instagram :</label>
+                <input type="text" id="insta" name="insta" placeholder="instagram.com/toncompte">
+
+                <label for="twitch">Ton compte Twitch :</label>
+                <input type="text" id="twitch" name="twitch" placeholder="twitch.tv/toncompte">
+
+                <label for="snap">Ton compte Snapchat :</label>
+                <input type="text" id="snap" name="snap" placeholder="snapchat.com/add/toncompte">
+
+                <label for="discord">Ton compte Discord :</label>
+                <input type="text" id="discord" name="discord" placeholder="discord.gg/toncompte">
+
+                <label for="linkedin">Ton compte LinkedIn :</label>
+                <input type="text" id="linkedin" name="linkedin" placeholder="linkedin.com/in/toncompte">
+
+                <button onclick="handleClick()">Calculer le score</button>
+            </form>
+
+            <div id="result" class="result-container">
+                <h2>Ton score de célébrité est :</h2>
+                <p id="score"></p>
+            </div>
+        </main>
+        <footer>Aucune des informations ne sera stocké, enregistrer ou utiliser autrement. De toute façon tu peux voir le code ;)</footer>
+    </div>
+</body>
+</html>
