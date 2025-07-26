@@ -1,6 +1,4 @@
-/* --- STYLE BLANC / BLEU MODERNE GEMINI POUR HTML DE BASE --- */
-
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap');
+/* @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap');
 
 :root {
   --blue: #3366ff;
@@ -30,7 +28,6 @@ body {
   overflow-x: hidden;
 }
 
-/* Halo lumineux en fond */
 body::before {
   content: '';
   position: fixed;
@@ -166,7 +163,7 @@ footer {
   background: none;
   box-shadow: none;
 }
-/* Responsive */
+
 @media (max-width: 650px) {
   .container {
     padding: 18px 6px 18px 6px;
@@ -188,7 +185,7 @@ footer {
   border-radius: 8px;
   box-shadow: 0 0 10px #5f86ff;
 }
-/* --- FIN DU STYLE --- */
+
 
 
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap');
@@ -486,7 +483,7 @@ footer {
   border-radius: 8px;
   box-shadow: 0 0 10px #5f86ff;
 }
-/* --- FIN DU STYLE --- */
+
 
 
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700&family=Montserrat:wght@400;700&display=swap');
@@ -634,7 +631,6 @@ button:hover {
   100% { background-position: 100% 50%; }
 }
 
-/* Score Bar */
 .score-container {
   margin: 2.5em 0 1em 0;
   text-align: center;
@@ -673,7 +669,6 @@ button:hover {
   margin-top: 0.3em;
 }
 
-/* Echelle de célébrité */
 .legend {
   margin: 2em 0 1em 0;
   display: flex;
@@ -701,7 +696,6 @@ button:hover {
   border-radius: 2px;
 }
 
-/* Résultats réseaux sociaux */
 .social-results {
   margin: 1.5em 0 0 0;
   display: flex;
@@ -738,12 +732,12 @@ button:hover {
   filter: drop-shadow(0 0 6px #5f6fff44);
 }
 
-/* Effets spéciaux : Glow, Glass, etc. */
+
 .glow {
   filter: drop-shadow(0 0 7px var(--accent)) drop-shadow(0 0 14px var(--primary));
 }
 
-/* Particules animées en fond (optionnel, à ajouter en JS) */
+
 #particles-bg {
   position: fixed;
   top: 0; left: 0; width: 100vw; height: 100vh;
@@ -751,7 +745,7 @@ button:hover {
   pointer-events: none;
 }
 
-/* Responsive */
+
 @media (max-width: 650px) {
   .container {
     padding: 18px 6px 18px 6px;
@@ -768,7 +762,7 @@ button:hover {
   }
 }
 
-/* Scrollbar custom */
+
 ::-webkit-scrollbar {
   width: 10px;
   background: #e7e7fa;
@@ -777,6 +771,4 @@ button:hover {
   background: var(--primary);
   border-radius: 8px;
   box-shadow: 0 0 10px var(--accent);
-}
-
-/* --- FIN DU STYLE --- */
+} */
