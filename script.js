@@ -1,18 +1,24 @@
-console.log("Script loaded successfully");
+console.log("Script OK");
 
-// Etudier la manière de calculer le score de célébrité
 // Changer l'API mistral quand publication avec date d'expiration plan gratuit
+// Trouver un moyen de cacher toutes les API et infos sensibles. Je me demande si un .env marche sur un script en javascript coté client. En effet 
 
 // Lorsqu'une erreur survient, il faut annuler la fonction en renvoyant null au lieu de renvoyer 0 ou autre résultat qui est interprété.
 // Il faut bloquer la recherche lorsque le nom ou prénom est vide.
 
-// Créer un stockage via storage local pour stocker les résultats et éviter de faire des recherches à chaque fois. (possibilté d'expiration ? variable global sur toutes les instances github ?)
+// Etudier la manière de calculer le score de célébrité
 
 const handleClick = async () => {
     console.time("executionTime");
     console.log("=========================================");
 
     event.preventDefault();
+
+    if (!canMakeRequest()) {
+        alert("Limite de requêtes atteinte. Réessayez demain.");
+        console.log("Limite de requêtes atteinte.");
+        return;
+    }
 
     const prenom = document.getElementById('prenom').value.trim();
     const nom = document.getElementById('nom').value.trim();
@@ -515,19 +521,31 @@ function displayScore(score) {
     scoreElement.textContent = score;
 }
 
-function addStorage () {
-    // Implémentation pour stocker les résultats dans le stockage local avec date d'expiration ?
-    // Peut-être utiliser localStorage.setItem('celebrityScore', score);
-}
+function canMakeRequest() {
+    const key = 'api_usage';
+    const usage = JSON.parse(localStorage.getItem(key)) || {
+        count: 4,
+        lastReset: Date.now()
+    };
 
-function deleteStorage () {
-    // Implémentation pour supprimer les résultats du stockage local
-    // Peut-être utiliser localStorage.removeItem('celebrityScore');
-}
+    const now = Date.now();
+    const oneDay = 24 * 60 * 60 * 1000;
 
-function updateStorage() {
-    // Implémentation pour mettre à jour les résultats dans le stockage local
-    // Peut-être utiliser localStorage.setItem('celebrityScore', newScore);
+    // Réinitialiser le compteur si plus d'un jour s'est écoulé
+    if (now - usage.lastReset > oneDay) {
+        usage.count = 0;
+        usage.lastReset = now;
+    }
+
+    if (usage.count >= 5) {
+        console.warn("Quota de requêtes atteint.");
+        return false;
+    }
+
+    // Incrémenter le compteur et stocker
+    usage.count += 1;
+    localStorage.setItem(key, JSON.stringify(usage));
+    return true;
 }
 
 

@@ -45,15 +45,19 @@
                 <label for="linkedin">Ton compte LinkedIn :</label>
                 <input type="text" id="linkedin" name="linkedin" placeholder="linkedin.com/in/toncompte"> -->
 
-                <button onclick="handleClick()">Calculer le score</button>
+                <button type="submit" onclick="handleClick()">Calculer le score</button>
             </form>
 
             <div id="result" class="result-container">
                 <h2>Ton score de célébrité est :</h2>
                 <p id="scoreboard"><span id="score">?</span>/5</p>
             </div>
+
+            <p>Ton score de célébrité est basé sur les informations publiques associées à ton nom, prénom et réseaux sociaux que tu as mis. En cas d'homonymie, des données appartenant à une autre personne portant le même nom et prénom pourraient influencer le score.</p>
+            <p>Et puis ton score de célébriter ne veut absolument rien dire, il n'est rien de plus que le fruit de mon amusement en code (même si... si t'es pas celèbre, tu ne l'es pas...).</p>
+            <p>Enfin, je limite le nombre de requêtes à 5 par jours car toutes les APIs utilisés sont gratuites et ont un nombre de requêtes max par mois. Evitez de contourner cette mesure pour les autres :)</p>
         </main>
-        <footer>Aucune des informations ne sera stocké, enregistrer ou utiliser autrement. De toute façon tu peux voir le code ;)<br><br>Ton score de célébrité est basé sur les informations publiques associées à ton nom, prénom et réseaux sociaux que tu as mis. En cas d'homonymie, des données appartenant à une autre personne portant le même nom et prénom pourraient influencer le score.<br><br>Et puis ton score de célébriter ne veut absolument rien dire, il n'est rien de plus que le fruit de mon amusement en code (même si... si t'es pas celèbre, tu ne l'es pas...).</footer>
+        <footer>Aucune des informations ne sera stocké, enregistrer ou utiliser autrement. De toute façon tu peux voir le code ;)</footer>
     </div>
 </body>
 </html>
