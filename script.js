@@ -7,7 +7,6 @@ console.log("Script loaded successfully");
 // Il faut bloquer la recherche lorsque le nom ou prénom est vide.
 
 // Créer un stockage via storage local pour stocker les résultats et éviter de faire des recherches à chaque fois. (possibilté d'expiration ? variable global sur toutes les instances github ?)
-// Recherche sur Tiktok puis Twitter/X puis fini pour ça
 
 const handleClick = async () => {
     console.time("executionTime");
@@ -73,6 +72,47 @@ const handleClick = async () => {
 
 async function searchTwitter(twitter = null) {
     console.log("Fonction searchTwitter appelée avec:", twitter);
+
+    if (!twitter) {
+        console.error("Le nom d'utilisateur Twitter est requis pour la recherche.");
+        return false;
+    }
+
+    const url = `https://twitter-x-api.p.rapidapi.com/api/user/detail?username=${twitter}`;
+    const options = {
+        method: 'GET',
+        headers: {
+            'x-rapidapi-key': '2b50770698msh6ea4be8ceba4f91p1129d0jsne95622f6fec2',
+            'x-rapidapi-host': 'twitter-x-api.p.rapidapi.com'
+        }
+    };
+
+    try {
+        console.log("Envoi de la requête à l'API Twitter pour l'utilisateur :", twitter);
+        const response = await fetch(url, options);
+        const data = await response.json();
+
+        console.log("Réponse API Twitter:", data);
+
+        if (data && data.user && data.user.result && data.user.result.legacy && typeof data.user.result.legacy.followers_count) {
+            const userFollowersTwitter = data.user.result.legacy.followers_count;
+            console.log("Nombre d'abonnés Twitter:", userFollowersTwitter);
+
+            if (isNaN(userFollowersTwitter)) return 0;
+
+            if (userFollowersTwitter < 100) return 0;
+            if (userFollowersTwitter < 1000) return 1;
+            if (userFollowersTwitter < 10000) return 2;
+            if (userFollowersTwitter < 100000) return 3;
+            if (userFollowersTwitter < 1000000) return 4;
+            return 5; // Plus d'un million d'abonnés
+        } else {
+            throw new Error("Données utilisateur Twitter non trouvées ou mal formatées.");
+        }
+    } catch (error) {
+        console.error("Erreur lors de la recherche de l'utilisateur Twitter :", error);
+        return 0; // Si erreur technique, on considère comme introuvable
+    }
 }
 
 async function searchTiktok(tiktok = null) {
