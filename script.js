@@ -1,8 +1,5 @@
 console.log("Script OK");
 
-// Changer l'API mistral quand publication avec date d'expiration plan gratuit
-// Trouver un moyen de cacher toutes les API et infos sensibles.
-
 const handleClick = async () => {
     console.time("executionTime");
     console.log("=========================================");
