@@ -1,12 +1,7 @@
 console.log("Script OK");
 
 // Changer l'API mistral quand publication avec date d'expiration plan gratuit
-// Trouver un moyen de cacher toutes les API et infos sensibles. Je me demande si un .env marche sur un script en javascript coté client. En effet 
-
-// Lorsqu'une erreur survient, il faut annuler la fonction en renvoyant null au lieu de renvoyer 0 ou autre résultat qui est interprété.
-// Il faut bloquer la recherche lorsque le nom ou prénom est vide.
-
-// Etudier la manière de calculer le score de célébrité
+// Trouver un moyen de cacher toutes les API et infos sensibles.
 
 const handleClick = async () => {
     console.time("executionTime");
@@ -14,35 +9,51 @@ const handleClick = async () => {
 
     event.preventDefault();
 
-    if (!canMakeRequest()) {
-        alert("Limite de requêtes atteinte. Réessayez demain.");
-        console.log("Limite de requêtes atteinte.");
-        return;
+    // Désactiver le bouton et changer son apparence
+    const submitBtn = document.getElementById('submit');
+    if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.style.backgroundColor = '#aaa';
+        submitBtn.style.cursor = 'not-allowed';
+        submitBtn.textContent = 'Calcul en cours...';
     }
 
-    const prenom = document.getElementById('prenom').value.trim();
-    const nom = document.getElementById('nom').value.trim();
-    const chaineYoutube = document.getElementById('youtube').value.trim();
-    const chaineTwitch = document.getElementById('twitch').value.trim();
-    const userInstagram = document.getElementById('insta').value.trim();
-    const userTiktok = document.getElementById('tiktok').value.trim();
-    const userTwitter = document.getElementById('twitter').value.trim();
-
-    console.log("Nom:", nom);
-    console.log("Prénom:", prenom);
-    console.log("Chaîne YouTube:", chaineYoutube);
-    console.log("Chaîne Twitch:", chaineTwitch);
-    console.log("Nom d'utilisateur Instagram:", userInstagram);
-    console.log("Nom d'utilisateur TikTok:", userTiktok);
-    console.log("Nom d'utilisateur Twitter:", userTwitter);
-
     try {
+        if (!canMakeRequest()) {
+            alert("Limite de requêtes atteinte. Réessayez demain.");
+            console.log("Limite de requêtes atteinte.");
+            return;
+        }
+
+        const prenom = document.getElementById('prenom').value.trim();
+        const nom = document.getElementById('nom').value.trim();
+
+        if (!prenom || !nom) {
+            alert("Le prénom et le nom sont obligatoires pour calculer ton score de célébrité.");
+            console.log("Erreur : prénom ou nom manquant.");
+            return;
+        }
+
+        const chaineYoutube = document.getElementById('youtube').value.trim();
+        const chaineTwitch = document.getElementById('twitch').value.trim();
+        const userInstagram = document.getElementById('insta').value.trim();
+        const userTiktok = document.getElementById('tiktok').value.trim();
+        const userTwitter = document.getElementById('twitter').value.trim();
+
+        console.log("Nom:", nom);
+        console.log("Prénom:", prenom);
+        console.log("Chaîne YouTube:", chaineYoutube);
+        console.log("Chaîne Twitch:", chaineTwitch);
+        console.log("Nom d'utilisateur Instagram:", userInstagram);
+        console.log("Nom d'utilisateur TikTok:", userTiktok);
+        console.log("Nom d'utilisateur Twitter:", userTwitter);
+
         const result = await Promise.allSettled([
             searchWikipedia(prenom, nom),
             searchGPT(prenom, nom),
             searchGoogle(prenom, nom),
             searchYoutube(chaineYoutube),
-            searchTwich(chaineTwitch),
+            searchTwitch(chaineTwitch),
             searchInstagram(userInstagram),
             searchTiktok(userTiktok),
             searchTwitter(userTwitter)
@@ -66,14 +77,35 @@ const handleClick = async () => {
         console.log("Vérification Score TikTok", tiktokReponse);
         console.log("Vérification Score Twitter", twitterReponse);
 
-        displayScore(gptReponse + wikiReponse + googleReponse + youtubeReponse + twitchReponse + instaReponse + tiktokReponse + twitterReponse);
+        const score = calculateScore({
+            wikipedia: wikiReponse,
+            gpt: gptReponse,
+            google: googleReponse,
+            youtube: youtubeReponse,
+            twitch: twitchReponse,
+            instagram: instaReponse,
+            tiktok: tiktokReponse,
+            twitter: twitterReponse
+        });
+
+        console.log("Score final calculé:", score);
+
+        displayScore(score);
 
         console.timeEnd("executionTime");
         console.log("=========================================");
     } catch (error) {
         console.error("Erreur lors de la recherche :", error);
         console.log("=========================================");
-    }  
+    } finally {
+        // Réactiver le bouton et restaurer son apparence
+        if (submitBtn) {
+            submitBtn.disabled = false;
+            submitBtn.style.backgroundColor = '';
+            submitBtn.style.cursor = '';
+            submitBtn.textContent = 'Calculer le score';
+        }
+    }
 }
 
 async function searchTwitter(twitter = null) {
@@ -81,7 +113,7 @@ async function searchTwitter(twitter = null) {
 
     if (!twitter) {
         console.error("Le nom d'utilisateur Twitter est requis pour la recherche.");
-        return false;
+        return null;
     }
 
     const url = `https://twitter-x-api.p.rapidapi.com/api/user/detail?username=${twitter}`;
@@ -100,11 +132,11 @@ async function searchTwitter(twitter = null) {
 
         console.log("Réponse API Twitter:", data);
 
-        if (data && data.user && data.user.result && data.user.result.legacy && typeof data.user.result.legacy.followers_count) {
+        if (data && data.user && data.user.result && data.user.result.legacy && typeof data.user.result.legacy.followers_count === "number") {
             const userFollowersTwitter = data.user.result.legacy.followers_count;
             console.log("Nombre d'abonnés Twitter:", userFollowersTwitter);
 
-            if (isNaN(userFollowersTwitter)) return 0;
+            if (isNaN(userFollowersTwitter)) return null;
 
             if (userFollowersTwitter < 100) return 0;
             if (userFollowersTwitter < 1000) return 1;
@@ -113,11 +145,11 @@ async function searchTwitter(twitter = null) {
             if (userFollowersTwitter < 1000000) return 4;
             return 5; // Plus d'un million d'abonnés
         } else {
-            throw new Error("Données utilisateur Twitter non trouvées ou mal formatées.");
+            return null;
         }
     } catch (error) {
         console.error("Erreur lors de la recherche de l'utilisateur Twitter :", error);
-        return 0; // Si erreur technique, on considère comme introuvable
+        return null;
     }
 }
 
@@ -126,7 +158,7 @@ async function searchTiktok(tiktok = null) {
 
     if (!tiktok) {
         console.error("Le nom d'utilisateur TikTok est requis pour la recherche.");
-        return false;
+        return null;
     }
 
     const url = `https://tiktok-api23.p.rapidapi.com/api/user/info?uniqueId=${tiktok}`;
@@ -145,11 +177,11 @@ async function searchTiktok(tiktok = null) {
 
         console.log("Réponse API TikTok:", data);
 
-        if (data && data.userInfo && data.userInfo.stats && data.userInfo.stats.followerCount) {
+        if (data && data.userInfo && data.userInfo.stats && typeof data.userInfo.stats.followerCount === "number") {
             const userFollowersTiktok = data.userInfo.stats.followerCount;
             console.log("Nombre d'abonnés TikTok:", userFollowersTiktok);
 
-            if (isNaN(userFollowersTiktok)) return 0;
+            if (isNaN(userFollowersTiktok)) return null;
 
             if (userFollowersTiktok < 100) return 0;
             if (userFollowersTiktok < 1000) return 1;
@@ -158,11 +190,11 @@ async function searchTiktok(tiktok = null) {
             if (userFollowersTiktok < 1000000) return 4;
             return 5; // Plus d'un million d'abonnés
         } else {
-            throw new Error("Données utilisateur TikTok non trouvées ou mal formatées.");
+            return null;
         }
     } catch (error) {
         console.error("Erreur lors de la recherche de l'utilisateur TikTok :", error);
-        return 0; // Si erreur technique, on considère comme introuvable
+        return null; // Si erreur technique, on considère comme introuvable
     }
 }
 
@@ -171,7 +203,7 @@ async function searchInstagram(insta = null) {
 
     if (!insta) {
         console.error("Le nom d'utilisateur Instagram est requis pour la recherche.");
-        return false;
+        return null;
     }
 
     const url = `https://instagram-looter2.p.rapidapi.com/profile?username=${insta}`;
@@ -190,11 +222,11 @@ async function searchInstagram(insta = null) {
 
         console.log("Réponse API Instagram:", data);
 
-        if (data && data.edge_followed_by && data.edge_followed_by.count !== undefined) {
+        if (data && data.edge_followed_by && typeof data.edge_followed_by.count === "number") {
             const userFollowersInstagram = data.edge_followed_by.count;
             console.log("Nombre d'abonnés Instagram:", userFollowersInstagram);
 
-            if (isNaN(userFollowersInstagram)) return 0;
+            if (isNaN(userFollowersInstagram)) return null;
 
             if (userFollowersInstagram < 100) return 0;
             if (userFollowersInstagram < 1000) return 1;
@@ -203,20 +235,21 @@ async function searchInstagram(insta = null) {
             if (userFollowersInstagram < 1000000) return 4;
             return 5; // Plus d'un million d'abonnés
         } else {
-            throw new Error("Données utilisateur Instagram non trouvées ou mal formatées.");
+            // Données manquantes ou mal formatées
+            return null;
         }
     } catch (error) {
         console.error("Erreur lors de la recherche de l'utilisateur Instagram :", error);
-        return 0; // Si erreur technique, on considère comme introuvable
+        return null; // Si erreur technique, on considère comme introuvable
     }
 }
 
-async function searchTwich(chaineTwitch = null) {
+async function searchTwitch(chaineTwitch = null) {
     console.log("Fonction searchTwitch appelée avec:", chaineTwitch);
 
     if (!chaineTwitch) {
         console.error("Le nom de la chaîne Twitch est requis pour la recherche.");
-        return false;
+        return null;
     }
 
     const clientTwitch_id = "o1be07vj17t69jaiey0ovqcgbg2cw4"
@@ -224,6 +257,11 @@ async function searchTwich(chaineTwitch = null) {
 
     const tokenTwitch = await getTwitchAccessToken(clientTwitch_id, secretTwitch_id);
     const userTwitchId = await getTwitchUserId(chaineTwitch, clientTwitch_id, tokenTwitch);
+
+    if (!userTwitchId) {
+        console.warn("Aucun utilisateur Twitch trouvé pour le nom :", chaineTwitch);
+        return null;
+    }
 
     try {
         const response = await fetch(`https://api.twitch.tv/helix/channels/followers?broadcaster_id=${userTwitchId}`, {
@@ -235,7 +273,7 @@ async function searchTwich(chaineTwitch = null) {
 
         if (!response.ok) {
             const error = await response.json();
-            throw new Error(`Twitch API error: ${res.status} - ${error.message}`);
+            throw new Error(`Twitch API error: ${response.status} - ${error.message}`);
         }
 
         const data = await response.json();
@@ -243,7 +281,7 @@ async function searchTwich(chaineTwitch = null) {
 
         console.log("Nombre de followers Twitch:", nbFollowersTwitch);
 
-        if (isNaN(nbFollowersTwitch)) return 0;
+        if (isNaN(nbFollowersTwitch)) return null;
 
         if (nbFollowersTwitch < 100) return 0;
         if (nbFollowersTwitch < 1000) return 1;
@@ -254,7 +292,7 @@ async function searchTwich(chaineTwitch = null) {
 
     } catch(error) {
         console.error("Erreur lors de la recherche de la chaîne Twitch :", error);
-        return 0; // Si erreur technique, on considère 0 abonnés
+        return null; // Si erreur technique, on considère 0 abonnés
     } 
 }
 
@@ -277,16 +315,22 @@ async function getTwitchAccessToken(clientId, clientSecret) {
 
 async function getTwitchUserId(username, clientId, accessToken) {
     console.log("Récupération de l'ID utilisateur Twitch pour le nom :", username);
-  const response = await fetch(`https://api.twitch.tv/helix/users?login=${username}`, {
-    headers: {
-      "Client-ID": clientId,
-      "Authorization": `Bearer ${accessToken}`,
-    },
-  });
+    const response = await fetch(`https://api.twitch.tv/helix/users?login=${username}`, {
+        headers: {
+        "Client-ID": clientId,
+        "Authorization": `Bearer ${accessToken}`,
+        },
+    });
 
-  const data = await response.json();
-  console.log("Données utilisateur Twitch :", data);
-  return data.data[0]?.id;
+    const data = await response.json();
+    console.log("Données utilisateur Twitch :", data);
+    if (data.data[0]?.id && data.data[0]?.id !== "") {
+    // if (Array.isArray(data.data) && data.data[0]?.id && data.data[0]?.id !== "") {
+        console.log("ID utilisateur Twitch trouvé :", data.data[0].id);
+        return data.data[0].id; // Retourne l'ID utilisateur Twitch
+    }
+    console.warn("Aucun ID utilisateur Twitch trouvé pour le nom :", username);
+    return null;
 }
 
 async function searchYoutube(chaineYoutube = null) {
@@ -294,14 +338,14 @@ async function searchYoutube(chaineYoutube = null) {
 
     if (!chaineYoutube) {
         console.error("Le nom de la chaîne YouTube est requis pour la recherche.");
-        return false;
+        return -1;
     }
 
     const idChaine = await getYoutubeChannelId(chaineYoutube);
 
     if (!idChaine) {
         console.warn("Aucune chaîne YouTube trouvée pour le nom :", chaineYoutube);
-        return 0; // Si aucune chaîne trouvée, on considère comme introuvable
+        return -1; // Si aucune chaîne trouvée, on considère comme introuvable
     }
 
     const apiKeyYoutube = "AIzaSyCVaCLlqIShLGxqRp9-8Xqfw6zOU88S68E";
@@ -331,11 +375,11 @@ async function searchYoutube(chaineYoutube = null) {
             return 5;
         } else {
             console.warn("Aucune statistique trouvée pour la chaîne YouTube :", chaineYoutube);
-            return 0; // Si aucune statistique trouvée, on considère comme introuvable
+            return -1; // Si aucune statistique trouvée, on considère comme introuvable
         }
     } catch (error) {
         console.error("Erreur lors de la recherche de la chaîne YouTube :", error);
-        return 0; // Si erreur technique, on considère 0 abonnés
+        return -1; // Si erreur technique, on considère que nous n'avons pas fait de recherche
     }
 }
 
@@ -359,7 +403,7 @@ async function getYoutubeChannelId(chaine) {
     }
   } catch (error) {
     console.error("Erreur lors de la recherche de l'ID de la chaîne YouTube :", error);
-    return null;
+    return -1;
   }
 }
 
@@ -398,7 +442,7 @@ async function searchGoogle(prenom = null, nom = null) {
         return 0; // Si aucun résultat trouvé, on considère comme introuvable
     } catch (error) {
         console.error("Erreur API Google Search:", error);
-        return 0; // Si erreur technique, on considère comme introuvable
+        return -1; // Si erreur technique, on considère comme introuvable
     }
 }
 
@@ -451,7 +495,7 @@ async function searchGPT(prenom = null, nom = null) {
         }
     } catch (error) {
         console.error("Erreur MistralAI:", error);
-        return 0; // Si erreur technique, on considère comme introuvable
+        return -1; // Si erreur technique, on considère que nous n'avons pas fait de recherche
     }
 }
 
@@ -461,7 +505,7 @@ async function searchWikipedia(prenom = null, nom = null) {
 
     if (!prenom || !nom) {
         console.error("Prénom et nom sont requis pour la recherche sur Wikipedia.");
-        return 0;
+        return -1;
     }
 
     const fullName = `${prenom} ${nom}`;
@@ -488,7 +532,7 @@ async function searchWikipedia(prenom = null, nom = null) {
 
     } catch (error) {
         console.error("Erreur lors de la recherche Wikipedia:", error);
-        return 0; // Si erreur technique, on considère comme introuvable
+        return -1; // Si erreur technique, on considère comme erreur
     }
 }
 
@@ -509,8 +553,34 @@ async function pageExists(url) {
     return false;
 }
 
-function calculateScore() {
-    // Simule un score basé sur des critères fictifs
+function calculateScore({wikipedia = null, gpt = null, google = null, youtube = null, twitch = null, instagram = null, tiktok = null, twitter = null}) {
+    const sources = [
+        { value: wikipedia, weight: 2 },
+        { value: gpt, weight: 2 },
+        { value: google, weight: 2 },
+        { value: youtube, weight: 1.5 },
+        { value: twitch, weight: 1 },
+        { value: instagram, weight: 1.5 },
+        { value: tiktok, weight: 1.5 },
+        { value: twitter, weight: 1.5 },
+    ];
+
+    let totalScore = 0;
+    let totalWeight = 0;
+
+    for (const source of sources) {
+        if (typeof source.value === "number" && !isNaN(source.value) && source.value >= 0) {
+            totalScore += source.value * source.weight;
+            totalWeight += source.weight;
+        }
+    }
+
+    if (totalWeight === 0) return 0;
+
+    const finalScore = totalScore / totalWeight;
+
+    // Optionnel : arrondi à 2 décimales
+    return Math.round(finalScore * 100) / 100;
 }
 
 function displayScore(score) {
