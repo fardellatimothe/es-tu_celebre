@@ -28,21 +28,17 @@ Notre algorithme magique fera le reste pour te donner ton score de célébrité 
 
 Pour calculer ton score, nous interrogeons diverses API publiques. Plus tu renseignes d'informations, plus le test est complet !
 
----
-## 💡 Les plateformes analysées et leurs données
-
-Pour calculer ton score, nous interrogeons diverses API publiques. Plus tu renseignes d'informations, plus le test est complet !
-
 | Plateforme / API | Entrée fournie | Résultat analysé |
 | :------------------------------- | :------------------------- | :------------------------------------------- |
 | 🌐 **Wikipédia** (API Wikimédia) | Nom & Prénom | Page existante sur la personne (Oui/Non) |
 | 🤖 **GPT** (API MistralAI - medium) | Nom & Prénom | IA connaît la personne (Oui/Non) |
-| 🔍 **Google** (API Google Custom Search) | Nom & Prénom | Score de 0 à 5 selon le nombre de résultats* |
-| 📺 **Youtube** (API Google Youtube v3) | Nom de la chaîne | Score de 0 à 5 selon le nombre de résultats* |
-| 🎮 **Twitch** (API Twitch Helix) | Nom de la chaîne | Score de 0 à 5 selon le nombre de résultats* |
-| 📸 **Instagram** (API RapidAPI Instagram Looter) | Nom d'utilisateur Instagram | Score de 0 à 5 selon le nombre de résultats* |
-| 🕺 **TikTok** (API RapidAPI TikTok API) | Nom d'utilisateur TikTok | Score de 0 à 5 selon le nombre de résultats* |
-| 🐦 **Twitter/X** (API RapidAPI Twitter API) | Nom d'utilisateur Twitter | Score de 0 à 5 selon le nombre de résultats* |
+| 🔍 **Google** (API Google Custom Search) | Nom & Prénom | Score de 0 à 5 selon le nombre de résultats |
+| 📺 **Youtube** (API Google Youtube v3) | Nom de la chaîne | Score de 0 à 5 selon le nombre de résultats |
+| 🎮 **Twitch** (API Twitch Helix) | Nom de la chaîne | Score de 0 à 5 selon le nombre de résultats |
+| 📸 **Instagram** (API RapidAPI Instagram Looter) | Nom d'utilisateur Instagram | Score de 0 à 5 selon le nombre de résultats |
+| 🕺 **TikTok** (API RapidAPI TikTok API) | Nom d'utilisateur TikTok | Score de 0 à 5 selon le nombre de résultats |
+| 🐦 **Twitter/X** (API RapidAPI Twitter API) | Nom d'utilisateur Twitter | Score de 0 à 5 selon le nombre de résultats |
+
 
 * **Échelle des scores de 0 à 5 (pour Google, YouTube, Twitch, Instagram, TikTok, Twitter/X) :**
     * `0` : 0-100 résultats
@@ -62,9 +58,9 @@ Pour calculer ton score, nous interrogeons diverses API publiques. Plus tu rense
 ---
 ## 🔒 Avertissement Légal : Utilisation des APIs
 
-Les clés d'APIs de ce projet sont visibles dans le fichier JavaScript. Elles sont **strictement dédiées à l'usage de ce test, à des fins non commerciales et personnelles**.
+Les clés d'APIs de ce projet sont **strictement dédiées à l'usage de ce test, à des fins non commerciales et personnelles**.
 
-**Toute utilisation malveillante, frauduleuse ou détournée de ces APIs est formellement interdite.** Cela inclut l'usurpation d'identité ou la tentative de contourner les limites de requêtes. En cas d'abus, je me réserve le droit de poursuivre en justice et de prendre toutes les mesures légales nécessaires pour protéger mes intérêts et ceux des fournisseurs d'APIs.
+**Toute utilisation malveillante, frauduleuse ou détournée de ces APIs est formellement interdite.** Cela inclut l'usurpation d'identité ou la tentative de contourner les limites de requêtes. En cas d'abus, je me réserve le droit toutes les mesures légales nécessaires pour protéger mes intérêts et ceux des fournisseurs d'APIs.
 
 Merci d'utiliser ce projet de manière responsable et dans un esprit de jeu !
 
