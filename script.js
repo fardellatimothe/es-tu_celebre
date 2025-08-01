@@ -13,10 +13,18 @@ document.addEventListener('DOMContentLoaded', () => {
     observer.observe(document.querySelector('.hiddencontainer'));
 });
 
-/**
- * Fonction pour changer le thème du conteneur de résultat selon le score
- * @param {number|string} score - Le score de célébrité (0-5) ou "?" pour aucun résultat
- */
+function scrollToResult() {
+    const resultContainer = document.getElementById('result');
+    
+    if (resultContainer) {
+        resultContainer.scrollIntoView({
+            behavior: 'smooth',
+            block: 'center',    // Centre l'élément verticalement
+            inline: 'nearest'   // Garde la position horizontale
+        });
+    }
+}
+
 function setResultTheme(score) {
     const resultContainer = document.getElementById('result');
     const scoreElement = document.getElementById('score');
@@ -642,6 +650,7 @@ function displayScore(score) {
 
     setResultTheme(score)
     scoreElement.textContent = score;
+    scrollToResult();
 }
 
 function canMakeRequest() {
