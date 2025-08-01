@@ -1,5 +1,62 @@
 console.log("Script OK");
 
+document.addEventListener('DOMContentLoaded', () => {
+    // Animation au scroll
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+                entry.target.style.animation = 'fadeInUp 0.6s ease-out';
+            }
+        });
+    });
+
+    observer.observe(document.querySelector('.hiddencontainer'));
+});
+
+/**
+ * Fonction pour changer le thème du conteneur de résultat selon le score
+ * @param {number|string} score - Le score de célébrité (0-5) ou "?" pour aucun résultat
+ */
+function setResultTheme(score) {
+    const resultContainer = document.getElementById('result');
+    const scoreElement = document.getElementById('score');
+    
+    if (!resultContainer) {
+        console.error('Élément result-container non trouvé');
+        return;
+    }
+
+    // Retirer toutes les classes de thème existantes
+    resultContainer.classList.remove('theme-green', 'theme-orange', 'theme-red');
+    
+    // Convertir le score en nombre si c'est une chaîne
+    const numericScore = typeof score === 'string' ? parseFloat(score) : score;
+    
+    // Appliquer le thème selon le score avec des seuils personnalisables
+    if (score === '?' || isNaN(numericScore)) {
+        // Thème gris par défaut - aucune classe ajoutée
+        console.log('Thème appliqué: Gris (par défaut)');
+    } else if (numericScore >= 4) {
+        // Score élevé: vert
+        resultContainer.classList.add('theme-green');
+        console.log('Thème appliqué: Vert (score élevé)');
+    } else if (numericScore >= 2) {
+        // Score moyen: orange
+        resultContainer.classList.add('theme-orange');
+        console.log('Thème appliqué: Orange (score moyen)');
+    } else if (numericScore >= 0) {
+        // Score faible: rouge
+        resultContainer.classList.add('theme-red');
+        console.log('Thème appliqué: Rouge (score faible)');
+    }
+
+    // Ajouter une animation de transition
+    resultContainer.style.transform = 'scale(0.95)';
+    setTimeout(() => {
+        resultContainer.style.transform = 'scale(1)';
+    }, 150);
+}
+
 const handleClick = async () => {
     console.time("executionTime");
     console.log("=========================================");
@@ -581,10 +638,9 @@ function calculateScore({wikipedia = null, gpt = null, google = null, youtube = 
 }
 
 function displayScore(score) {
-    const scoreboardElement = document.getElementById('scoreboard');
     const scoreElement = document.getElementById('score');
 
-    scoreboardElement.style.color = 'green';
+    setResultTheme(score)
     scoreElement.textContent = score;
 }
 
