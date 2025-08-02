@@ -33,11 +33,11 @@ Pour calculer ton score, nous interrogeons diverses API publiques. Plus tu rense
 | 🌐 **Wikipédia** (API Wikimédia) | Nom & Prénom | Page existante sur la personne (Oui/Non) |
 | 🤖 **GPT** (API MistralAI - medium) | Nom & Prénom | IA connaît la personne (Oui/Non) |
 | 🔍 **Google** (API Google Custom Search) | Nom & Prénom | Score de 0 à 5 selon le nombre de résultats |
-| 📺 **Youtube** (API Google Youtube v3) | Nom de la chaîne | Score de 0 à 5 selon le nombre de résultats |
-| 🎮 **Twitch** (API Twitch Helix) | Nom de la chaîne | Score de 0 à 5 selon le nombre de résultats |
-| 📸 **Instagram** (API RapidAPI Instagram Looter) | Nom d'utilisateur Instagram | Score de 0 à 5 selon le nombre de résultats |
-| 🕺 **TikTok** (API RapidAPI TikTok API) | Nom d'utilisateur TikTok | Score de 0 à 5 selon le nombre de résultats |
-| 🐦 **Twitter/X** (API RapidAPI Twitter API) | Nom d'utilisateur Twitter | Score de 0 à 5 selon le nombre de résultats |
+| 📺 **Youtube** (API Google Youtube v3) | Nom de la chaîne | Score de 0 à 5 selon le nombre d'abonnés |
+| 🎮 **Twitch** (API Twitch Helix) | Nom de la chaîne | Score de 0 à 5 selon le nombre d'abonnés |
+| 📸 **Instagram** (API RapidAPI Instagram Looter) | Nom d'utilisateur Instagram | Score de 0 à 5 selon le nombre d'abonnés |
+| 🕺 **TikTok** (API RapidAPI TikTok API) | Nom d'utilisateur TikTok | Score de 0 à 5 selon le nombre d'abonnés |
+| 🐦 **Twitter/X** (API RapidAPI Twitter API) | Nom d'utilisateur Twitter | Score de 0 à 5 selon le nombre d'abonnés |
 
 
 * **Échelle des scores de 0 à 5 (pour Google, YouTube, Twitch, Instagram, TikTok, Twitter/X) :**
