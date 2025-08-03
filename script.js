@@ -400,7 +400,7 @@ async function searchYoutube(chaineYoutube = null) {
 
     if (!chaineYoutube) {
         console.error("Le nom de la chaîne YouTube est requis pour la recherche.");
-        return -1;
+        return null;
     }
 
     const idChaine = await getYoutubeChannelId(chaineYoutube);
@@ -437,11 +437,11 @@ async function searchYoutube(chaineYoutube = null) {
             return 5;
         } else {
             console.warn("Aucune statistique trouvée pour la chaîne YouTube :", chaineYoutube);
-            return -1; // Si aucune statistique trouvée, on considère comme introuvable
+            return null; // Si aucune statistique trouvée, on considère comme introuvable
         }
     } catch (error) {
         console.error("Erreur lors de la recherche de la chaîne YouTube :", error);
-        return -1; // Si erreur technique, on considère que nous n'avons pas fait de recherche
+        return null; // Si erreur technique, on considère que nous n'avons pas fait de recherche
     }
 }
 
@@ -617,8 +617,8 @@ async function pageExists(url) {
 
 function calculateScore({wikipedia = null, gpt = null, google = null, youtube = null, twitch = null, instagram = null, tiktok = null, twitter = null}) {
     const sources = [
-        { value: wikipedia, weight: 2 },
-        { value: gpt, weight: 2 },
+        { value: wikipedia, weight: 2, isBinary: true },
+        { value: gpt, weight: 2, isBinary: true },
         { value: google, weight: 2 },
         { value: youtube, weight: 1.5 },
         { value: twitch, weight: 1 },
@@ -631,8 +631,15 @@ function calculateScore({wikipedia = null, gpt = null, google = null, youtube = 
     let totalWeight = 0;
 
     for (const source of sources) {
-        if (typeof source.value === "number" && !isNaN(source.value) && source.value >= 0) {
-            totalScore += source.value * source.weight;
+        let score = source.value;
+
+        if (typeof score === "number" && !isNaN(score) && score >= 0) {
+            // Si binaire (0 ou 1), convertir en échelle 0-5
+            if (source.isBinary) {
+                score = score === 1 ? 5 : 0;
+            }
+
+            totalScore += score * source.weight;
             totalWeight += source.weight;
         }
     }
@@ -641,7 +648,6 @@ function calculateScore({wikipedia = null, gpt = null, google = null, youtube = 
 
     const finalScore = totalScore / totalWeight;
 
-    // Optionnel : arrondi à 2 décimales
     return Math.round(finalScore * 100) / 100;
 }
 
